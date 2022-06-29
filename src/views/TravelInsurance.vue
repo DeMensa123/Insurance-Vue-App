@@ -1,0 +1,16 @@
+<template>
+  <div class="bg-gray-100 my-12">
+    <Insurance title="Vitajte na stránke poistenia" />
+  </div>
+</template>
+
+<script>
+import Insurance from '@/components/Insurance.vue'
+
+export default {
+  name: 'TravelInsurance',
+  components: {
+    Insurance,
+  },
+}
+</script>

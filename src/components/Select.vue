@@ -11,7 +11,7 @@
         aria-haspopup="listbox"
         aria-expanded="true"
         aria-labelledby="listbox-label"
-        class="cursor-pointer relative w-full pl-3 pr-10 py-3 rounded-md text-gray-700 text-left text-base border border-gray-300 focus:outline-none focus:border-gray-500 transition ease-in-out duration-150"
+        class="cursor-pointer relative w-full pl-3 pr-10 py-3 rounded-md text-left text-base text-gray-700 border border-gray-300 focus:outline-none focus:border-gray-500 transition ease-in-out duration-150"
       >
         <div class="flex items-center space-x-3">
           <span class="block truncate"> {{ value.name }} </span>
@@ -42,7 +42,7 @@
           role="option"
           v-for="d in data"
           v-bind:key="d"
-          class="text-gray-800 select-none relative py-3 pl-3 pr-9 cursor-pointer hover:text-white hover:bg-yellow-400 focus:outline-none focus:text-white focus:bg-yellow-400"
+          class="select-none relative py-3 pl-3 pr-9 cursor-pointer text-gray-800 hover:text-white hover:bg-yellow-400 focus:outline-none focus:text-white focus:bg-yellow-400"
         >
           <div class="flex items-center">
             <span
@@ -77,6 +77,7 @@ export default defineComponent({
     data: Array,
     value: Object,
   },
+  emits: ['valueSelect'],
   setup(context, { emit }) {
     const state = reactive({
       isOpen: false,
@@ -85,7 +86,6 @@ export default defineComponent({
     function isSelected(value) {
       return this.value === value
     }
-
     function closeDropdown() {
       state.isOpen = false
     }

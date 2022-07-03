@@ -70,7 +70,7 @@ export default {
           text: 'Cestovné poistenie',
         },
         {
-          url: '/health-insurance',
+          url: '/',
           text: 'Zdravotné poistenie',
         },
         {

@@ -35,7 +35,7 @@
               </label>
               <input
                 :min="new Date().toISOString().split('T')[0]"
-                :max="dateTo"
+                :max="selectedVariant === variants[0] ? dateTo : undefined"
                 class="cursor-pointer w-full rounded-md px-3 py-3 text-gray-700 border border-gray-300 text-base text-left focus:outline-none focus:border-gray-500 transition ease-in-out duration-150"
                 id="dateFrom"
                 type="date"
@@ -123,7 +123,7 @@
           <hr class="mb-6 border-t" />
           <div class="mb-6 text-center">
             <button
-              class="w-full md:w-1/3 rounded-md px-4 py-2 font-bold text-gray-800 hover:text-white bg-yellow-400 transition ease-in-out duration-150 hover:bg-yellow-500 focus:outline-none focus:shadow-outline"
+              class="w-full md:w-1/3 rounded-md px-4 py-2 font-bold text-gray-800 hover:text-white bg-yellow-400 hover:bg-yellow-500 transition ease-in-out duration-150 focus:outline-none focus:shadow-outline"
               type="submit"
             >
               Potvrdiť poistenie
@@ -211,18 +211,15 @@ export default {
     let selectedPackage = ref(state.packages[0])
     let selectedPeople = ref(state.people[0])
 
-    const rules = {
+    const rules = computed(() => ({
       dateFrom: { required },
-      dateTo: { required },
-    }
+      dateTo: {
+        required: selectedVariant.value === state.variants[0] ? true : false,
+      },
+    }))
     const v$ = useVuelidate(rules, state)
     const router = useRouter()
 
-    const submitForm = () => {
-      v$.value.$touch()
-      if (v$.value.$invalid) return
-      router.push('/')
-    }
     function computeDateDiff() {
       if (state.dateTo < state.dateFrom) return -1
       if (!state.dateTo || !state.dateFrom) return undefined
@@ -232,6 +229,8 @@ export default {
 
     function onValueSelectVariant(value) {
       selectedVariant.value = value
+      state.dateFrom = undefined
+      state.dateTo = undefined
     }
 
     function onValueSelectPackage(value) {
@@ -251,7 +250,7 @@ export default {
           state.dateDiff *
           state.additionals
             .filter((add) => add.value === true)
-            .reduce((prev, curr) => prev + curr.prices[0], 1)
+            .reduce((prev, curr) => prev + curr.prices[0], 1) // 1 = 100 % + prirazka
       } else if (selectedVariant.value === state.variants[1]) {
         price =
           selectedPeople.value.name *
@@ -263,6 +262,14 @@ export default {
       return price
     }
 
+    const submitForm = () => {
+      v$.value.$touch()
+      if (v$.value.$invalid) {
+        return
+      }
+      router.push('/thank-you')
+    }
+
     return {
       ...toRefs(state),
       selectedVariant,
@@ -271,9 +278,10 @@ export default {
       onValueSelectVariant,
       onValueSelectPackage,
       onValueSelectPeople,
-      submitForm,
-      v$,
       computePrice,
+      submitForm,
+      computeDateDiff,
+      v$,
     }
   },
 }

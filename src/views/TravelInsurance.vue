@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-100 my-12">
+  <div class="bg-gray-100 mt-12 min-h-screen">
     <Insurance title="Vitajte na stránke poistenia" />
   </div>
 </template>
